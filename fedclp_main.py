@@ -80,7 +80,7 @@ class FL_Proc:
         
         # 创建以当前时间命名的文件夹
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_folder = os.path.join(f"{current_dir}/logs/fedclp_CLIP_logs/", self.logName)
+        log_folder = os.path.join(f"{current_dir}/logs/fedclp_logs/", self.logName)
         self.logfile = log_folder
         os.makedirs(log_folder, exist_ok=True)
 
@@ -134,8 +134,8 @@ class FL_Proc:
             if self.ALA:
                 self.Clients[c] = FedALA_Client_Sim(self.rand_percent,self.layerIndex,c,self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,self.topk)
             else:
-                # self.Clients[c] = Client_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs)
-                self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess)
+                self.Clients[c] = Client_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs)
+                # self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess)
                
             self.Selection.register_client(c)
 

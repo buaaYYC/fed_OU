@@ -280,7 +280,7 @@ class Client_Sim:
         return Tr
     
 class Client_clip_Sim:
-    def __init__(self, Loader, Model, Lr, wdecay, epoch=1, fixlr=False, optzer="SGD", Depochs=False):
+    def __init__(self, Loader, Model, Lr, wdecay, epoch=1, fixlr=False, optzer="SGD", Depochs=False, clip_model=None, preprocess=None):
         self.TrainData = cp.deepcopy(Loader)
         self.DLen = 0
         for batch_id, (inputs, targets) in enumerate(self.TrainData):
@@ -311,8 +311,9 @@ class Client_clip_Sim:
 
         cifar10_path = "data/cifar-10-batches-py/batches.meta"
         obj_cifar10 = load_labels_name(cifar10_path)  # 加载cifar10标签
-
-        self.clip_model, self.preprocess = clip.load('ViT-B/32', 'cuda')
+        # 这个地方可能会导致，导入多次模型
+        # self.clip_model, self.preprocess = clip.load('ViT-B/32', 'cuda')
+        self.clip_model, self.preprocess = clip_model,preprocess
         label_name = obj_cifar10['label_names']
 
         self.clip_model.eval()
@@ -379,7 +380,7 @@ class Client_clip_Sim:
         return Res
 
     def selftrain(self, control_local=None, control_global=None):
-        print("Star training clip_Sim !")
+        # print("Star training clip_Sim !")
         # CLIP Loading
         
 
@@ -433,8 +434,8 @@ class Client_clip_Sim:
             for batch_id, (inputs, targets) in enumerate(self.TrainData):
                 C = C + 1
                 inputs, targets = inputs.to(device), targets.to(device)
-                print("inputs shape:",inputs.shape) # torch.size([16, 3, 32, 32])
-                print("targets shape:",targets.shape) # torch.size([16])
+                # print("inputs shape:",inputs.shape) # torch.size([16, 3, 32, 32])
+                # print("targets shape:",targets.shape) # torch.size([16])
                 # get clip feature encode           
                 
                 outputs = self.Model(inputs) # torch.size([16, 10])
@@ -464,21 +465,21 @@ class Client_clip_Sim:
                 # 用 unsqueeze
                 # clip_inputs = clip_inputs.unsqueeze(0)
 
-                print(f"预处理后的输入张量形状: {clip_inputs.shape}")
+                # print(f"预处理后的输入张量形状: {clip_inputs.shape}")
                 with torch.no_grad():
                     image_features = self.clip_model.encode_image(clip_inputs)
-                print("image_features shape:",image_features.shape)
-                print("text_features shape:",self.text_features.shape)
-                print("----")
+                # print("image_features shape:",image_features.shape)
+                # print("text_features shape:",self.text_features.shape)
+                # print("----")
                 image_features = image_features.float()
                 image_features /= image_features.norm(dim=-1, keepdim=True)
                 
                 # 实现原理是使用numpy库中的@运算符，表示矩阵乘法。
                 # 这意味着每个图像特征向量将与每个文本特征向量计算内积，得到的结果矩阵中的每个元素代表图像和文本特征向量之间的相似度。
                 clip_logits = (100.0 * image_features @ self.text_features.T)
-                print("clip_logits shape:",clip_logits.shape)
-                print("outputs shape:",outputs.shape)
-                print("targets shape:",targets.shape)
+                # print("clip_logits shape:",clip_logits.shape)
+                # print("outputs shape:",outputs.shape)
+                # print("targets shape:",targets.shape)
                 #Eq. 1
                 loss1 = self.criterion(outputs, targets)
                 loss2 = self.kd_criterion(outputs, clip_logits)
@@ -853,7 +854,7 @@ class FedALA_Client_Sim:
         return NVec
 
     def selftrain(self, control_local=None, control_global=None):
-        print("Star training clip_Sim !")
+        # print("Star training clip_Sim !")
         # CLIP Loading
         clip_model, preprocess = clip.load('ViT-B/32', 'cuda')
 
