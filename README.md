@@ -1,4 +1,4 @@
-# FedCEA+CLIP: Federated Learning with Contrastive Embeddings and Language Pretraining
+# Leveraging Critical Learning Period and CLIP-Supervised Training for Enhanced Performance in Heterogeneous Federated Learning
 ## 目标
 - 利用CLIP实现蒸馏学习，知道分类
 -  利用CLP，关键学习期，降低通信量
