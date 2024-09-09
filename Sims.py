@@ -442,7 +442,7 @@ class Client_clip_Sim:
                 optimizer.zero_grad()
 
                 # get clip feature encode
-                beta = 1 
+                beta = 0.5
                 batch_size, channels, height, width = inputs.shape
 
                     # 预处理图像
