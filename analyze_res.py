@@ -128,8 +128,11 @@ file_paths = [
     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_logs\\FL_16_cifar10_alex_0.1_200\\20240906_143742.txt',
     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_0.1_200\\20240907_081138.txt',
     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_0.1_200_beta0.5\\20240908_183505.txt'
+    ,'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_alpha0.1_200_beta0.1\\20240910_093616.txt',
+    'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_alpha0.1_200_beta0.3\\20240909_174350.txt'
 ]
-labels = ['fedclp_logs','fedclp_CLIP_logs','fedclp_CLIP_logs_beta0.5'] 
+labels = ['fedclp_logs','fedclp_CLIP_alpha0.1_beta1','fedclp_CLIP_alpha0.1_beta0.5','fedclp_CLIP_alpha0.1_beta0.1',
+          'fedclp_CLIP_alpha0.1_beta0.3'] 
 
 read_and_plot_logs_list(file_paths,labels)
 

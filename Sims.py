@@ -280,7 +280,7 @@ class Client_Sim:
         return Tr
     
 class Client_clip_Sim:
-    def __init__(self, Loader, Model, Lr, wdecay, epoch=1, fixlr=False, optzer="SGD", Depochs=False, clip_model=None, preprocess=None):
+    def __init__(self, Loader, Model, Lr, wdecay, epoch=1, fixlr=False, optzer="SGD", Depochs=False, clip_model=None, preprocess=None,clip_beta=1):
         self.TrainData = cp.deepcopy(Loader)
         self.DLen = 0
         for batch_id, (inputs, targets) in enumerate(self.TrainData):
@@ -305,6 +305,8 @@ class Client_clip_Sim:
         self.trainloss = 0
         self.difloss = 0
         self.depochs = Depochs
+
+        self.clip_beta = clip_beta
 
         self.criterion = nn.CrossEntropyLoss().to(device)
         self.kd_criterion = KDLoss(T=3.0).to(device)
@@ -442,7 +444,6 @@ class Client_clip_Sim:
                 optimizer.zero_grad()
 
                 # get clip feature encode
-                beta = 0.5
                 batch_size, channels, height, width = inputs.shape
 
                     # 预处理图像
@@ -483,7 +484,7 @@ class Client_clip_Sim:
                 #Eq. 1
                 loss1 = self.criterion(outputs, targets)
                 loss2 = self.kd_criterion(outputs, clip_logits)
-                loss = loss1 + beta * loss2
+                loss = loss1 + self.clip_beta * loss2
                 self.optimizer.zero_grad()
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(self.Model.parameters(),10)

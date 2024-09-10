@@ -60,6 +60,8 @@ class FL_Proc:
         self.train_loss_list = []
         self.train_samples = []
 
+        self.clip_beta = configs['clip_beta']
+
 
         #是否要使用ALA模块
         self.ALA = configs["ALA"]
@@ -70,7 +72,7 @@ class FL_Proc:
         self.Depochs = Configs["Dynamic_epochs"] 
         self.topk = Configs["topk"]
         # log_name
-        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_" + str(self.Alpha) + "_" + str(self.MaxIter)+"_beta0.5"       
+        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_alpha" + str(self.Alpha) + "_" + str(self.MaxIter)+"_beta" + str(self.clip_beta)       
         self.updateIDs = []
         for i in range(self.PClients):
             self.updateIDs.append(i)
@@ -135,7 +137,7 @@ class FL_Proc:
                 self.Clients[c] = FedALA_Client_Sim(self.rand_percent,self.layerIndex,c,self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,self.topk)
             else:
                 # self.Clients[c] = Client_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs)
-                self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess)
+                self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess,clip_beta=self.clip_beta)
                
             self.Selection.register_client(c)
 
@@ -285,7 +287,7 @@ if __name__ == '__main__':
     Configs["alpha"] = args.alpha
     Configs["optimizer"] = args.opt
 
-    Configs["algorithm"] = "CriticalFL"
+    Configs["algorithm"] = "CriticalFL_clip"
     # Configs["algorithm"] = "fedavg"
     Configs['nclients'] = 128
     Configs['pclients'] = 16
@@ -314,6 +316,8 @@ if __name__ == '__main__':
     Configs["rand_percent"] = 0.8
     Configs["Dynamic_epochs"] = False
     Configs["topk"] = 20 #客户端训练完后，上传最重要的20%参数
+
+    Configs['clip_beta'] = 0.1
 
     FLSim = FL_Proc(Configs) 
     FLSim.main()
