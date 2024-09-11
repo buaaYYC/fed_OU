@@ -82,7 +82,7 @@ class FL_Proc:
         
         # 创建以当前时间命名的文件夹
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_folder = os.path.join(f"{current_dir}/logs/fedclp_CLIP_logs/", self.logName)
+        log_folder = os.path.join(f"{current_dir}/logs/{self.Algo}/", self.logName)
         self.logfile = log_folder
         os.makedirs(log_folder, exist_ok=True)
 
@@ -287,7 +287,7 @@ if __name__ == '__main__':
     Configs["alpha"] = args.alpha
     Configs["optimizer"] = args.opt
 
-    Configs["algorithm"] = "CriticalFL_clip"
+    Configs["algorithm"] = "CriticalFL_clip_FedAdag"
     # Configs["algorithm"] = "fedavg"
     Configs['nclients'] = 128
     Configs['pclients'] = 16
@@ -308,7 +308,7 @@ if __name__ == '__main__':
     Configs["log_step"] = 1
     Configs["wdecay"] = 1e-5
     Configs["CThresh"] = 0.01
-    Configs["server_optim"] = None # "Adam","Adag","Yogi"
+    Configs["server_optim"] = 'Adag' # "Adam","Adag","Yogi"
     Configs["layer_index"] = 2
     #这两个是配套的
     Configs["ALA"] = False

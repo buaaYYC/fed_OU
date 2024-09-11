@@ -1446,7 +1446,7 @@ class Server_Sim:
                     self.Vt[ky] = Gen
             
             GetGrad = cp.deepcopy(GParas)
-            BParas = self.getParas()
+            BParas = self.getParas()[0]
             for ky in BParas.keys():
                 grad = GParas[ky] - BParas[ky]
                 GetGrad[ky] = grad
