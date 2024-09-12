@@ -287,13 +287,13 @@ if __name__ == '__main__':
     Configs["alpha"] = args.alpha
     Configs["optimizer"] = args.opt
 
-    Configs["algorithm"] = "CriticalFL_clip_Yogi"
+    Configs["algorithm"] = "fedavg_clip"
     # Configs["algorithm"] = "fedavg"
     Configs['nclients'] = 128
     Configs['pclients'] = 16
     Configs["learning_rate"] = 0.01
-    Configs["critical"] = True
-    Configs["compression"] = True
+    Configs["critical"] = False
+    Configs["compression"] = False
     Configs["normal"] = True
     Configs["fixlr"] = False
     Configs["global_lr"] = True
