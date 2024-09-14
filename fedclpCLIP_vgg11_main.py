@@ -267,9 +267,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Description of your script")
     
     # 添加命令行参数
-    parser.add_argument("-alpha", type=float,default=1, help="Description of param1")
-    parser.add_argument("-dname", type=str,default="fmnist", help="Description of param2")
-    parser.add_argument("-mname", type=str,default="alex", help="Description of param2")
+    parser.add_argument("-alpha", type=float,default=0.3, help="Description of param1")
+    parser.add_argument("-dname", type=str,default="cifar10", help="Description of param2")
+    parser.add_argument("-mname", type=str,default="vgg", help="Description of param2")
     parser.add_argument("-cuda", type=str, default='0', help="CUDA device to use")
     parser.add_argument("-opt", type=str, default='SGD', help="CUDA device to use") #"SGD", "VRL","FedProx","FedNova","ditto"
     # 解析命令行参数
@@ -282,7 +282,7 @@ if __name__ == '__main__':
     # Configs['dname'] = "fmnist"
     # Configs["mname"] = "alex"
     # Configs["mname"] = "vgg"
-    # Configs["mname"] = "resnet" 
+    # Configs["mname"] = "resnet"
     print("alpha:",args.alpha)
     Configs['dname'] = args.dname
     Configs["mname"] = args.mname
@@ -305,7 +305,8 @@ if __name__ == '__main__':
     Configs['isIID'] = False
     Configs["rand_num"] = False
     Configs["epoch"] = 2
-    Configs["batch_size"] = 8
+    # Configs["batch_size"] = 8
+    Configs["batch_size"] = 4 #由于显存爆了
     Configs["iters"] = 200
     Configs["log_step"] = 1
     Configs["wdecay"] = 1e-5

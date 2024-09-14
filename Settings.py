@@ -33,7 +33,7 @@ torch.backends.cudnn.deterministic = True
 
 ## Configurations:
 # device = "cuda"
-device = "cuda:1"
+device = "cuda:0"
 
 BaseRoot = "//"
 ShakeRoot = "//"
