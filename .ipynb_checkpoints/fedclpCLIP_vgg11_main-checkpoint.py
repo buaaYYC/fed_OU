@@ -61,7 +61,6 @@ class FL_Proc:
         self.train_samples = []
 
         self.clip_beta = configs['clip_beta']
-        self.BatchSize = configs['batch_size']
 
 
         #是否要使用ALA模块
@@ -73,7 +72,7 @@ class FL_Proc:
         self.Depochs = Configs["Dynamic_epochs"] 
         self.topk = Configs["topk"]
         # log_name
-        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_alpha" + str(self.Alpha) + "_" + str(self.MaxIter)+"_beta" + str(self.clip_beta) + "_bs"+str(self.BatchSize)      
+        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_alpha" + str(self.Alpha) + "_" + str(self.MaxIter)+"_beta" + str(self.clip_beta)       
         self.updateIDs = []
         for i in range(self.PClients):
             self.updateIDs.append(i)
@@ -268,10 +267,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Description of your script")
     
     # 添加命令行参数
-    parser.add_argument("-alpha", type=float,default=0.1, help="Description of param1")
+    parser.add_argument("-alpha", type=float,default=0.2, help="Description of param1")
     parser.add_argument("-dname", type=str,default="cifar10", help="Description of param2")
     parser.add_argument("-mname", type=str,default="vgg", help="Description of param2")
-    parser.add_argument("-cuda", type=str, default='1', help="CUDA device to use")
+    parser.add_argument("-cuda", type=str, default='0', help="CUDA device to use")
     parser.add_argument("-opt", type=str, default='SGD', help="CUDA device to use") #"SGD", "VRL","FedProx","FedNova","ditto"
     # 解析命令行参数
     args = parser.parse_args()
@@ -313,7 +312,7 @@ if __name__ == '__main__':
     Configs["wdecay"] = 1e-5
     Configs["CThresh"] = 0.01
     Configs["server_optim"] = None # "Adam","Adag","Yogi"
-    Configs["layer_index"] = 1
+    Configs["layer_index"] = 2
     #这两个是配套的
     Configs["ALA"] = False
     # rand_percent 随机采样率作为训练w的值
