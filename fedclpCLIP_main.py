@@ -120,6 +120,7 @@ class FL_Proc:
     def main(self):
         print("start load VIT-B!")
         clip_model, preprocess = clip.load('ViT-B/32', 'cuda')
+        clip_model.to(device)
         print("log save to file:",str(self.logfile)) 
         self.get_train_datas()
         self.Server = Server_Sim(self.TrainLoader, self.GModel, self.LR, self.WDecay, self.FixLR, self.DataName)
@@ -266,8 +267,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Description of your script")
     
     # 添加命令行参数
-    parser.add_argument("-alpha", type=float,default=0.1, help="Description of param1")
-    parser.add_argument("-dname", type=str,default="cifar10", help="Description of param2")
+    parser.add_argument("-alpha", type=float,default=0.2, help="Description of param1")
+    parser.add_argument("-dname", type=str,default="fmnist", help="Description of param2")
     parser.add_argument("-mname", type=str,default="alex", help="Description of param2")
     parser.add_argument("-cuda", type=str, default='0', help="CUDA device to use")
     parser.add_argument("-opt", type=str, default='SGD', help="CUDA device to use") #"SGD", "VRL","FedProx","FedNova","ditto"
@@ -281,13 +282,14 @@ if __name__ == '__main__':
     # Configs['dname'] = "fmnist"
     # Configs["mname"] = "alex"
     # Configs["mname"] = "vgg"
-    # Configs["mname"] = "resnet"
+    # Configs["mname"] = "resnet" 
+    print("alpha:",args.alpha)
     Configs['dname'] = args.dname
     Configs["mname"] = args.mname
     Configs["alpha"] = args.alpha
     Configs["optimizer"] = args.opt
 
-    Configs["algorithm"] = "CriticalFL_clip_Yogi"
+    Configs["algorithm"] = "fedclp_CLIP_logs"
     # Configs["algorithm"] = "fedavg"
     Configs['nclients'] = 128
     Configs['pclients'] = 16

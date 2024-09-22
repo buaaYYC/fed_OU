@@ -32,7 +32,9 @@ torch.cuda.manual_seed_all(seed)
 torch.backends.cudnn.deterministic = True
 
 ## Configurations:
-device = "cuda"
+# device = "cuda"
+device = "cuda:1"
+
 BaseRoot = "//"
 ShakeRoot = "//"
 ShakeRoot = "./data/shakeDrop/"
