@@ -304,6 +304,7 @@ if __name__ == '__main__':
     Configs["rand_num"] = False
     Configs["epoch"] = 2
     Configs["batch_size"] = 8
+    
     Configs["iters"] = 200
     Configs["log_step"] = 1
     Configs["wdecay"] = 1e-5
