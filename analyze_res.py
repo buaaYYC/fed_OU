@@ -75,7 +75,49 @@ def plot_metrics(all_rounds, all_train_losses, all_ptest_accs, labels):
     plt.savefig('result_analyze/fedclp_clip.png')
     plt.show()
   
-
+def plot_metrics_one(all_rounds, all_ptest_accs, labels):
+    # 设置Nature风格的参数
+    plt.rcParams.update({
+        'font.family': 'sans-serif',  # 字体为无衬线字体，期刊常用 Arial
+        'font.sans-serif': ['Arial'],  # 使用 Arial 字体
+        'axes.linewidth': 1.0,  # 边框线宽
+        'axes.spines.top': False,  # 去掉顶部边框
+        'axes.spines.right': False,  # 去掉右侧边框
+        'xtick.major.size': 5,  # x轴主刻度线长度
+        'ytick.major.size': 5,  # y轴主刻度线长度
+        'xtick.minor.size': 3,  # x轴次刻度线长度
+        'ytick.minor.size': 3,  # y轴次刻度线长度
+        'xtick.direction': 'in',  # 刻度线向内
+        'ytick.direction': 'in',  # 刻度线向内
+        'legend.frameon': False,  # 图例不带边框
+        'legend.fontsize': 10,  # 图例字体大小
+        'axes.labelsize': 12,  # 坐标轴标签字体大小
+        'axes.titlesize': 14,  # 标题字体大小
+        'lines.markersize': 4,  # 点的大小
+        'lines.linewidth': 1.5,  # 线宽
+        'figure.dpi': 300,  # 高分辨率
+    })
+    
+    plt.figure(figsize=(7, 5))  # 设置图形大小
+    
+    for i in range(len(all_rounds)):
+        rounds = all_rounds[i]
+        ptest_accs = all_ptest_accs[i]
+        
+        smooth_ptest_accs = smooth_data(ptest_accs)
+        smooth_rounds = rounds[:len(smooth_ptest_accs)]  # Adjust rounds to match smoothed data length
+        
+        # 绘制 PTest Accuracy 和 Round 的变化
+        plt.plot(smooth_rounds, smooth_ptest_accs, marker='o', linestyle='-', label=labels[i])
+    
+    plt.xlabel('Round')
+    plt.ylabel('PTest Accuracy')
+    plt.title('PTest Accuracy vs. Round')
+    plt.legend(loc='best')  # 图例放置在最佳位置
+    
+    plt.tight_layout()
+    plt.savefig('result_analyze/fedclp_clip_accuracy_nature_style.png', dpi=300)  # 保存为高分辨率图像
+    plt.show()
 
 def compute_last_10_avg_and_std(all_ptest_accs, labels):
     for i in range(len(all_ptest_accs)):
@@ -119,7 +161,8 @@ def read_and_plot_logs_list(file_paths,labels):
         # labels.append(os.path.basename(os.path.dirname(file_path)))  # 使用文件所在目录作为标签
     
     # plot_metrics(all_rounds, all_train_losses, all_ptest_accs, labels)
-    plot_metrics(all_rounds, all_train_losses, all_g_accs, labels)
+    plot_metrics_one(all_rounds, all_ptest_accs, labels)
+    # plot_metrics(all_rounds, all_train_losses, all_g_accs, labels)
 
     compute_last_10_avg_and_std(all_g_accs, labels)
 
