@@ -2,7 +2,9 @@
 ## 目标
 - 利用CLIP实现蒸馏学习，知道分类
 -  利用CLP，关键学习期，降低通信量
--  
+- 
+
+# 训练方式 
 
 ## CLIP模型路径
     CLIP 模型会被下载并缓存到你系统的缓存目录中，通常是以下位置：
@@ -10,6 +12,15 @@
     Linux/MacOS: ~/.cache/clip/
     Windows: C:\Users\<username>\.cache\clip\
 ```
+## 在多个数据集和模型架构上训练
+- fedclpCLIP_main.py 是训练主函数
+- fedclpCLIP_resnet_main.py 是用来训练并测试resnet 和 cifar100 。
+- fedclpCLIP_alexnet_fmnist_main.py 用来训练alexnet和fmnist的，
+## 函数说明
+- sims.py 中存放的模拟客户端和服务端的函数
+- sims_fmnist.py 是针对fmnist，由于类别标签不一致，所以需要正对fmnist类别，CLIP监督学习。
+- 其他类似 
+
 
 ## 选择性上传
 - 选择性上传：可以选择性的上传数据集，只上传需要的部分数据集，减少通信量。
