@@ -152,6 +152,56 @@ def smooth_data(data, window_size=3):
     # 滑动平均平滑数据
     return np.convolve(data, np.ones(window_size)/window_size, mode='valid')
 
+def plot_two_metrics(rounds_data, acc_data, loss_data, labels, save_name):
+    # 设置图形参数，适合学术出版
+    plt.rcParams.update({
+        'font.family': 'sans-serif',
+        'font.sans-serif': ['Arial'],
+        'axes.linewidth': 1.0,
+        'axes.spines.top': False,
+        'axes.spines.right': False,
+        'grid.alpha': 0.3,
+        'figure.dpi': 300,
+    })
+
+    # 创建一个图形，包含两个子图
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # 自定义颜色
+    colors = ['#0072B2', '#D55E00', '#009E73']
+
+    # 绘制 rounds vs accuracy
+    for i in range(len(rounds_data)):
+        rounds = rounds_data[i]
+        acc = acc_data[i]
+        ax1.plot(rounds, acc, label=labels[i], color=colors[i % len(colors)], linewidth=1.5)
+
+    ax1.set_xlabel('Rounds', fontsize=12)
+    ax1.set_ylabel('Accuracy', fontsize=12)
+    ax1.set_title('Rounds vs Accuracy', fontsize=14, pad=10)
+    ax1.legend(loc='best', frameon=False, fontsize=9)
+    ax1.grid(True, which='major', linestyle='--', linewidth=0.6, alpha=0.5)
+
+    # 绘制 rounds vs loss
+    for i in range(len(rounds_data)):
+        rounds = rounds_data[i]
+        loss = loss_data[i]
+        ax2.plot(rounds, loss, label=labels[i], color=colors[i % len(colors)], linewidth=1.5)
+
+    ax2.set_xlabel('Rounds', fontsize=12)
+    ax2.set_ylabel('Loss', fontsize=12)
+    ax2.set_title('Rounds vs Loss', fontsize=14, pad=10)
+    ax2.legend(loc='best', frameon=False, fontsize=9)
+    ax2.grid(True, which='major', linestyle='--', linewidth=0.6, alpha=0.5)
+
+    # 紧凑布局，避免元素重叠
+    plt.tight_layout()
+
+    # 保存图像为高分辨率PNG，背景透明
+    plt.savefig(f'result_analyze/{save_name}.png', dpi=300, transparent=True)
+
+    # 显示图形
+    plt.show()
 
 def compute_last_10_avg_and_std(all_ptest_accs, labels):
     for i in range(len(all_ptest_accs)):
@@ -180,22 +230,16 @@ def read_and_plot_logs_list(file_paths,labels,save_name):
         # labels.append(os.path.basename(os.path.dirname(file_path)))  # 使用文件所在目录作为标签
     
     # plot_metrics(all_rounds, all_train_losses, all_ptest_accs, labels)
-    plot_metrics_one(all_rounds, all_g_accs, labels,save_name)
+    # plot_metrics_one(all_rounds, all_g_accs, labels,save_name)
+    # 三维图示例数据
+    plot_two_metrics(all_rounds, all_g_accs, all_train_losses, labels, '3d_nature_style_plot')
     # plot_metrics(all_rounds, all_train_losses, all_g_accs, labels)
     # plot_metrics(all_rounds, all_train_losses, all_g_accs, labels,save_name=save_name)
 
     compute_last_10_avg_and_std(all_g_accs, labels)
 
 
-# file_paths = [
-#     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_logs\\FL_16_cifar10_alex_0.1_200\\20240906_143742.txt',
-#     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_0.1_200\\20240907_081138.txt',
-#     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_0.1_200_beta0.5\\20240908_183505.txt'
-#     ,'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_alpha0.1_200_beta0.1\\20240910_093616.txt',
-#     'A:\\北航\\论文\\fedceaClp\\fedcea\\logs\\fedclp_CLIP_logs\\FL_16_cifar10_alex_alpha0.1_200_beta0.3\\20240909_174350.txt'
-# ]
-# labels = ['fedclp_logs','fedclp_CLIP_alpha0.1_beta1','fedclp_CLIP_alpha0.1_beta0.5','fedclp_CLIP_alpha0.1_beta0.1',
-#           'fedclp_CLIP_alpha0.1_beta0.3'] 
+
 
 file_paths = [
     './logs/fedclp_CLIP_logs/FL_16_cifar10_alex_alpha0.1_200_beta0.1/20240910_093616.txt',
