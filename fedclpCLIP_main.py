@@ -267,8 +267,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Description of your script")
     
     # 添加命令行参数
-    parser.add_argument("-alpha", type=float,default=0.2, help="Description of param1")
-    parser.add_argument("-dname", type=str,default="fmnist", help="Description of param2")
+    parser.add_argument("-alpha", type=float,default=0.1, help="Description of param1")
+    parser.add_argument("-dname", type=str,default="cifar10", help="Description of param2")
     parser.add_argument("-mname", type=str,default="alex", help="Description of param2")
     parser.add_argument("-cuda", type=str, default='0', help="CUDA device to use")
     parser.add_argument("-opt", type=str, default='SGD', help="CUDA device to use") #"SGD", "VRL","FedProx","FedNova","ditto"
@@ -320,7 +320,7 @@ if __name__ == '__main__':
     Configs["Dynamic_epochs"] = False
     Configs["topk"] = 20 #客户端训练完后，上传最重要的20%参数
 
-    Configs['clip_beta'] = 0.1
+    Configs['clip_beta'] = 0
 
     FLSim = FL_Proc(Configs) 
     FLSim.main()

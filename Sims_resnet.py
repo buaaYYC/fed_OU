@@ -315,6 +315,7 @@ class Client_clip_Sim:
         obj_cifar10 = load_labels_name(cifar10_path)  # 加载cifar10标签
         cifar100_path = "data/cifar-100-python/meta"
         obj_cifar100 = load_labels_name(cifar100_path)
+        
         # 这个地方可能会导致，导入多次模型
         # self.clip_model, self.preprocess = clip.load('ViT-B/32', 'cuda')
         self.clip_model, self.preprocess = clip_model,preprocess

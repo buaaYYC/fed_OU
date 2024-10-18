@@ -60,6 +60,8 @@ class FL_Proc:
         self.train_loss_list = []
         self.train_samples = []
 
+        self.clip_beta = configs['clip_beta']
+
 
         #是否要使用ALA模块
         self.ALA = configs["ALA"]
@@ -70,7 +72,7 @@ class FL_Proc:
         self.Depochs = Configs["Dynamic_epochs"] 
         self.topk = Configs["topk"]
         # log_name
-        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_" + str(self.Alpha) + "_" + str(self.MaxIter)       
+        self.logName = "FL_" + str(self.PClients) + "_" + self.DataName + "_" + self.ModelName + "_alpha" + str(self.Alpha) + "_" + str(self.MaxIter)+"_beta" + str(self.clip_beta)       
         self.updateIDs = []
         for i in range(self.PClients):
             self.updateIDs.append(i)
@@ -80,7 +82,7 @@ class FL_Proc:
         
         # 创建以当前时间命名的文件夹
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_folder = os.path.join(f"{current_dir}/logs/fedclp_logs/", self.logName)
+        log_folder = os.path.join(f"{current_dir}/logs/{self.Algo}/", self.logName)
         self.logfile = log_folder
         os.makedirs(log_folder, exist_ok=True)
 
@@ -118,6 +120,7 @@ class FL_Proc:
     def main(self):
         print("start load VIT-B!")
         clip_model, preprocess = clip.load('ViT-B/32', 'cuda')
+        clip_model.to(device)
         print("log save to file:",str(self.logfile)) 
         self.get_train_datas()
         self.Server = Server_Sim(self.TrainLoader, self.GModel, self.LR, self.WDecay, self.FixLR, self.DataName)
@@ -134,8 +137,8 @@ class FL_Proc:
             if self.ALA:
                 self.Clients[c] = FedALA_Client_Sim(self.rand_percent,self.layerIndex,c,self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,self.topk)
             else:
-                self.Clients[c] = Client_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs)
-                # self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess)
+                # self.Clients[c] = Client_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs)
+                self.Clients[c] = Client_clip_Sim(self.ClientLoaders[c], self.GModel, self.LR, self.WDecay, self.Epoch,self.FixLR, self.Optmzer,self.Depochs,clip_model=clip_model,preprocess=preprocess,clip_beta=self.clip_beta)
                
             self.Selection.register_client(c)
 
@@ -279,13 +282,14 @@ if __name__ == '__main__':
     # Configs['dname'] = "fmnist"
     # Configs["mname"] = "alex"
     # Configs["mname"] = "vgg"
-    # Configs["mname"] = "resnet"
+    # Configs["mname"] = "resnet" 
+    print("alpha:",args.alpha)
     Configs['dname'] = args.dname
     Configs["mname"] = args.mname
     Configs["alpha"] = args.alpha
     Configs["optimizer"] = args.opt
 
-    Configs["algorithm"] = "CriticalFL"
+    Configs["algorithm"] = "fedclp_CLIP_logs"
     # Configs["algorithm"] = "fedavg"
     Configs['nclients'] = 128
     Configs['pclients'] = 16
@@ -302,6 +306,7 @@ if __name__ == '__main__':
     Configs["rand_num"] = False
     Configs["epoch"] = 2
     Configs["batch_size"] = 8
+    
     Configs["iters"] = 200
     Configs["log_step"] = 1
     Configs["wdecay"] = 1e-5
@@ -314,6 +319,8 @@ if __name__ == '__main__':
     Configs["rand_percent"] = 0.8
     Configs["Dynamic_epochs"] = False
     Configs["topk"] = 20 #客户端训练完后，上传最重要的20%参数
+
+    Configs['clip_beta'] = 0
 
     FLSim = FL_Proc(Configs) 
     FLSim.main()
